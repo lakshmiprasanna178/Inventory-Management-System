@@ -1,0 +1,517 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudStock - Inventory Management</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f6fb;
+            color: #25334a;
+        }
+
+        header {
+            background: #173b35;
+            color: white;
+            padding: 23px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 27px;
+        }
+
+        header p {
+            margin-top: 7px;
+            color: #c6e5d9;
+            font-size: 13px;
+        }
+
+        .user {
+            background: #ffffff;
+            color: #173b35;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        nav {
+            background: white;
+            padding: 17px 6%;
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px #00000008;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #526176;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #168064;
+        }
+
+        .container {
+            width: 88%;
+            max-width: 1250px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h2 {
+            font-size: 28px;
+            margin-bottom: 9px;
+        }
+
+        .welcome p {
+            color: #78859a;
+            font-size: 14px;
+        }
+
+        .add-button {
+            background: #168064;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .add-button:hover {
+            background: #11634e;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 5px solid #168064;
+            box-shadow: 0 4px 15px #00000008;
+        }
+
+        .stat-card p {
+            color: #78859a;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h2 {
+            font-size: 29px;
+            color: #173b35;
+        }
+
+        .stat-card span {
+            display: block;
+            margin-top: 9px;
+            color: #168064;
+            font-size: 12px;
+        }
+
+        .inventory-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000008;
+            overflow-x: auto;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .panel-heading h2 {
+            font-size: 21px;
+        }
+
+        .search-box {
+            padding: 10px 13px;
+            border: 1px solid #dce2eb;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th {
+            background: #f1f6f4;
+            color: #61766e;
+            padding: 16px 13px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 18px 13px;
+            border-bottom: 1px solid #edf0f4;
+            font-size: 13px;
+        }
+
+        .product-name {
+            color: #25334a;
+            font-weight: bold;
+        }
+
+        .category {
+            color: #78859a;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .in-stock {
+            background: #dff7e9;
+            color: #16804a;
+        }
+
+        .low-stock {
+            background: #fff0cd;
+            color: #a66b00;
+        }
+
+        .out-stock {
+            background: #ffe2e2;
+            color: #c03939;
+        }
+
+        .view-link {
+            color: #168064;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .view-link:hover {
+            text-decoration: underline;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-top: 28px;
+        }
+
+        .info-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000008;
+        }
+
+        .info-panel h3 {
+            margin-bottom: 18px;
+        }
+
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf0f4;
+            font-size: 14px;
+        }
+
+        .stock-item:last-child {
+            border-bottom: none;
+        }
+
+        .stock-item strong {
+            color: #c07816;
+        }
+
+        .info-panel p {
+            color: #78859a;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        footer {
+            background: #173b35;
+            color: white;
+            text-align: center;
+            padding: 24px;
+            margin-top: 40px;
+            line-height: 1.8;
+        }
+
+        footer p {
+            color: #c6e5d9;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            header h1 {
+                font-size: 22px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .stats,
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h2 {
+                font-size: 24px;
+            }
+
+            .inventory-panel,
+            .info-panel {
+                padding: 17px;
+            }
+
+            nav {
+                gap: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>☁ CloudStock</h1>
+            <p>Cloud-Based Inventory Management System</p>
+        </div>
+
+        <div class="user">👤 Admin Dashboard</div>
+    </header>
+
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#inventory">Inventory</a>
+        <a href="#low-stock">Low Stock Alerts</a>
+        <a href="#reports">Reports</a>
+    </nav>
+
+    <main class="container" id="dashboard">
+
+        <section class="welcome">
+            <div>
+                <h2>Inventory Overview 📦</h2>
+                <p>Monitor products, stock availability, and inventory status.</p>
+            </div>
+
+            <a href="#inventory" class="add-button">+ Add Product</a>
+        </section>
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Products</p>
+                <h2>1,250</h2>
+                <span>Products registered</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Available Stock</p>
+                <h2>8,640</h2>
+                <span>Units available</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Low Stock Items</p>
+                <h2>18</h2>
+                <span>Needs attention</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Out of Stock</p>
+                <h2>05</h2>
+                <span>Restocking required</span>
+            </div>
+
+        </section>
+
+        <section class="inventory-panel" id="inventory">
+
+            <div class="panel-heading">
+                <h2>Product Inventory</h2>
+                <input
+                    type="text"
+                    class="search-box"
+                    placeholder="Search products..."
+                    aria-label="Search products"
+                >
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>PRD001</td>
+                        <td class="product-name">Laptop</td>
+                        <td class="category">Electronics</td>
+                        <td>120</td>
+                        <td>₹45,000</td>
+                        <td><span class="badge in-stock">In Stock</span></td>
+                        <td><a href="#inventory" class="view-link">View</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>PRD002</td>
+                        <td class="product-name">Wireless Mouse</td>
+                        <td class="category">Accessories</td>
+                        <td>08</td>
+                        <td>₹650</td>
+                        <td><span class="badge low-stock">Low Stock</span></td>
+                        <td><a href="#inventory" class="view-link">View</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>PRD003</td>
+                        <td class="product-name">Keyboard</td>
+                        <td class="category">Accessories</td>
+                        <td>75</td>
+                        <td>₹1,200</td>
+                        <td><span class="badge in-stock">In Stock</span></td>
+                        <td><a href="#inventory" class="view-link">View</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>PRD004</td>
+                        <td class="product-name">Printer</td>
+                        <td class="category">Electronics</td>
+                        <td>00</td>
+                        <td>₹12,500</td>
+                        <td><span class="badge out-stock">Out of Stock</span></td>
+                        <td><a href="#inventory" class="view-link">View</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>PRD005</td>
+                        <td class="product-name">USB Drive</td>
+                        <td class="category">Storage</td>
+                        <td>15</td>
+                        <td>₹450</td>
+                        <td><span class="badge low-stock">Low Stock</span></td>
+                        <td><a href="#inventory" class="view-link">View</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>PRD006</td>
+                        <td class="product-name">Monitor</td>
+                        <td class="category">Electronics</td>
+                        <td>42</td>
+                        <td>₹9,000</td>
+                        <td><span class="badge in-stock">In Stock</span></td>
+                        <td><a href="#inventory" class="view-link">View</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <section class="bottom-grid">
+
+            <div class="info-panel" id="low-stock">
+                <h3>⚠ Low Stock Alerts</h3>
+
+                <div class="stock-item">
+                    <span>Wireless Mouse</span>
+                    <strong>08 units left</strong>
+                </div>
+
+                <div class="stock-item">
+                    <span>USB Drive</span>
+                    <strong>15 units left</strong>
+                </div>
+
+                <div class="stock-item">
+                    <span>Printer</span>
+                    <strong>Out of stock</strong>
+                </div>
+            </div>
+
+            <div class="info-panel" id="reports">
+                <h3>📊 Inventory Reports</h3>
+
+                <p>
+                    Review product quantities, stock availability,
+                    and restocking requirements from one central dashboard.
+                </p>
+
+                <p>
+                    This interface is designed for a cloud-hosted inventory
+                    portal that can be accessed from different devices.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <h3>☁ CloudStock</h3>
+        <p>Cloud-Based Inventory Management System</p>
+        <p>Created using HTML and CSS | Student Project © 2026</p>
+    </footer>
+
+</body>
+</html>
+```
